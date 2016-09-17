@@ -33,7 +33,7 @@ iframe {
   background-color: white;
   opacity: 0.5;
   height: 100vh;
-  width: 100vw;
+  width: 90vw;
 }
 /* END SOLUTION */
 
@@ -52,4 +52,8 @@ iframe {
   line-height: 33px;
   font-size: 25px;
   float: right;
+}
+
+.playerBall {
+  position: absolute;;
 }
