@@ -17,8 +17,7 @@ var createNewBall = function(){
 }
 
 // Create a board to let users play in, give it class
-d3.select('.board').append('svg').attr('class', 'svgBoard'); //delete board(dont forget to add mouse to svgBoard)
-
+// d3.select('.board').append('svg').attr('class', 'svgBoard'); //delete board(dont forget to add mouse to svgBoard)
 
 
 
@@ -28,7 +27,7 @@ var d3svgBoard = d3.select('.svgBoard');
 
 
 // Create enemy ball
-var d3enemyBall = d3svgBoard.selectAll('div')
+var d3enemyBall = d3svgBoard.selectAll('span')
 .data(createNewBall())
 .enter()
 .append('circle')
@@ -37,9 +36,6 @@ var d3enemyBall = d3svgBoard.selectAll('div')
 .attr('r', radius)
 .attr('class','enemyBall')
 .attr('fill', 'blue');
-
-
-
 
 // Create player ball
 d3svgBoard.selectAll('circle')
@@ -51,6 +47,12 @@ d3svgBoard.selectAll('circle')
 .attr('r', function(d){return d.r})
 .attr('class','playerBall')
 .attr('fill', 'red');
+
+//align the health bar to the right;
+d3svgBoard.append('rect').attr('x', '' + window.innerWidth - window.innerWidth*.1).attr('id', 'health').attr('y', '0');
+
+
+
 
 ///mouse effects
 d3svgBoard.on('mousemove', function(){
@@ -71,7 +73,11 @@ setInterval(function() {
 }, speed);
 var lifeLimit = 10;
 var collisionCount = 0;
-var playerCanCollide = true;
+var playerCanCollide = false;
+
+setTimeout(function(){
+  playerCanCollide = true;
+}, 2000)
 
 
 
@@ -92,7 +98,7 @@ var checkCollision = function(){
       playerCanCollide = false;
       setTimeout(function(){
         playerCanCollide = true;
-      }, 3000);
+      }, 4000);
       healthUpdate();
       //blackout
       d3svgBoard.transition().duration(200).style('background-color', 'blue');
@@ -117,5 +123,5 @@ setInterval(function(){
 // update the health bar
 var healthUpdate = function() {
   var healthHeight = '' + window.innerHeight*(lifeLimit - collisionCount)/10;
-  d3.select('.healthbar').transition().duration(2000).style('height', healthHeight);  
+  d3.select('#health').transition().duration(2000).attr('y', window.innerHeight -healthHeight);  
 }

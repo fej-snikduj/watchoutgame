@@ -20,7 +20,7 @@ body {
   background-color: black;
 }*/
 .board {
-  float:left;
+  
 }
 .svgBoard {
   /*border-width: thick;*/
@@ -28,12 +28,12 @@ body {
   background-color: white;
   opacity: 0.5;
   height: 100vh;
-  width: 90vw;
+  width: 100vw;
   float:left;
 }
 /* END SOLUTION */
 
-.scoreboard {
+/*.scoreboard {
   width: 10vw;
   height: 100vh;
   background-color: rgba(255, 255, 255, 0.5);
@@ -43,7 +43,7 @@ body {
   line-height: 33px;
   font-size: 25px;
   float: right;
-}
+}*/
 
 .healthbar {
   width: 100vw;
@@ -55,11 +55,21 @@ body {
 
 
 .time {
-  text-shadow: 5 px;
+  position: fixed;
+  bottom: 0;
+  font: font: 100px Tahoma, Helvetica, Arial, Sans-Serif;
+  color: green;
+  font-size: 3em;
+  text-shadow: 2px 2px 2px blue;
+  opacity: .7;
 }
 
 #health {
   height: 100vh;
-  width: 100vw;
+  width: 10vw;
   fill: green;
+  float: right;
+  position: fixed;
+  z-index: 5;
+  opacity: .7;
 }
