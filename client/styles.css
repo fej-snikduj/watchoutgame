@@ -20,7 +20,7 @@ body {
   background-color: black;
 }*/
 .board {
-  
+
 }
 .svgBoard {
   /*border-width: thick;*/
@@ -29,7 +29,6 @@ body {
   opacity: 0.5;
   height: 100vh;
   width: 100vw;
-  float:left;
 }
 /* END SOLUTION */
 
@@ -54,22 +53,38 @@ body {
 }
 
 
-.time {
+.time, .gameOverText{
   position: fixed;
   bottom: 0;
   font: font: 100px Tahoma, Helvetica, Arial, Sans-Serif;
-  color: green;
+  color: black;
   font-size: 3em;
   text-shadow: 2px 2px 2px blue;
   opacity: .7;
+  width: 100vw;
+  text-align: center;
+
 }
 
 #health {
   height: 100vh;
   width: 10vw;
   fill: green;
-  float: right;
+  /*left: 90vh;*/
   position: fixed;
   z-index: 5;
   opacity: .7;
+}
+.level {
+  position: absolute;
+  top: 5vh;
+  width: 100vw;
+  height: 5vh;
+  text-align: center;
+  font: font: 100px Tahoma, Helvetica, Arial, Sans-Serif;
+  color: black;
+  font-size: 3em;
+  text-shadow: 2px 2px 2px blue;
+
+
 }
