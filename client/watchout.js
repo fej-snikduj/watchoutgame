@@ -19,6 +19,9 @@ var createNewBall = function(){
 // Create a board to let users play in, give it class
 d3.select('.board').append('svg').attr('class', 'svgBoard'); //delete board(dont forget to add mouse to svgBoard)
 
+
+
+
 // .style('background-color',)
 var d3svgBoard = d3.select('.svgBoard');
 
@@ -34,6 +37,10 @@ var d3enemyBall = d3svgBoard.selectAll('div')
 .attr('r', radius)
 .attr('class','enemyBall')
 .attr('fill', 'blue');
+
+
+
+
 // Create player ball
 d3svgBoard.selectAll('circle')
 .data([ball], function(d){return d.id})
@@ -45,21 +52,30 @@ d3svgBoard.selectAll('circle')
 .attr('class','playerBall')
 .attr('fill', 'red');
 
-
+///mouse effects
 d3svgBoard.on('mousemove', function(){
   var position = d3.mouse(this);
   d3svgBoard.select('.playerBall')
   .attr('cx', position[0])
   .attr('cy', position[1]);
 });
+
+
+
+///keep enemy moving
 var speed = 2000;
 setInterval(function() {
   d3enemyBall.data(createNewBall()).transition().duration(speed)
   .attr('cx', function(d){return d[0]})
   .attr('cy', function(d){return d[1]})
 }, speed);
+var lifeLimit = 10;
 var collisionCount = 0;
 var playerCanCollide = true;
+
+
+
+///start collision function
 var checkCollision = function(){
   var currentEnemyPos = [];
   var enemyBalls = document.getElementsByClassName('enemyBall');
@@ -77,8 +93,8 @@ var checkCollision = function(){
       setTimeout(function(){
         playerCanCollide = true;
       }, 3000);
-      d3.select('.collisions')
-      .text('Collisions: ' + collisionCount);
+      healthUpdate();
+      //blackout
       d3svgBoard.transition().duration(200).style('background-color', 'blue');
     }
   }
@@ -88,6 +104,20 @@ var checkCollision = function(){
 setInterval(function(){checkCollision()}, 100);
 setInterval(function(){
   d3svgBoard.transition().duration(1500).style('background-color', 'white')}, 3000);
+var time = 0;
 setInterval(function(){
+  d3.select('.time')
+  .transition()
+  .duration(50)
+  .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
+  time++;
+},100);
 
-})
+var healthUpdate = function() {
+  var healthHeight = '' + (lifeLimit - collisionCount)*10 + 'vh';
+  var d3healthArray = d3.select('.scoreboard').selectAll('.healthbar');
+  d3healthArray.data([]).exit().remove();
+
+  d3.select('.scoreboard').selectAll('.healthbar').data([healthHeight]).enter().append('div').transition().duration(1000).attr('class', 'healthbar').style('height', healthHeight);
+
+}
