@@ -123,5 +123,17 @@ setInterval(function(){
 // update the health bar
 var healthUpdate = function() {
   var healthHeight = '' + window.innerHeight*(lifeLimit - collisionCount)/10;
-  d3.select('#health').transition().duration(2000).attr('y', window.innerHeight -healthHeight);  
+  d3.select('#health').transition().duration(2000).attr('y', window.innerHeight -healthHeight);
+  if (collisionCount > 2) {
+    d3.select('#health').transition().delay(2000).style('fill', 'greenyellow');
+  }  
+  if (collisionCount > 3) {
+    d3.select('#health').transition().delay(2000).style('fill', 'yellow');
+  }
+  if (collisionCount >= 6) {
+    d3.select('#health').transition().delay(2000).style('fill', 'orange');
+  }
+  if (collisionCount >= 8) {
+    d3.select('#health').transition().delay(2000).style('fill', 'red');
+  }
 }
