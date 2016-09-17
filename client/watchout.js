@@ -113,11 +113,9 @@ setInterval(function(){
   time++;
 },100);
 
+
+// update the health bar
 var healthUpdate = function() {
-  var healthHeight = '' + (lifeLimit - collisionCount)*10 + 'vh';
-  var d3healthArray = d3.select('.scoreboard').selectAll('.healthbar');
-  d3healthArray.data([]).exit().remove();
-
-  d3.select('.scoreboard').selectAll('.healthbar').data([healthHeight]).enter().append('div').transition().duration(1000).attr('class', 'healthbar').style('height', healthHeight);
-
+  var healthHeight = '' + window.innerHeight*(lifeLimit - collisionCount)/10;
+  d3.select('.healthbar').transition().duration(2000).style('height', healthHeight);  
 }
