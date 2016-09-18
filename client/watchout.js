@@ -17,7 +17,9 @@ This section is for initiating the balls
 //Create new position for 20 enemy balls
 var numberOfEnemy = 10;
 var enemyRadius = 30;
-var createNewBall = function(){
+var enemyColor = 'blue';
+var blackOutColor = 'blue'
+var createNewPositions = function(){
   var enemyPositions = [];
   for( var i = 0; i < numberOfEnemy; i++){
     enemyPositions[i]=[Math.random()*(window.innerWidth*1.2) - window.innerWidth*.1 , Math.random()*(window.innerHeight*1.2) - window.innerHeight*.1];
@@ -26,14 +28,14 @@ var createNewBall = function(){
 }
 // Create enemy ball
 var d3enemyBall = d3svgBoard.selectAll('span')
-.data(createNewBall())
+.data(createNewPositions())
 .enter()
 .append('circle')
 .attr('cx', function(d){return d[0]})
 .attr('cy', function(d){return d[1]})
 .attr('r', enemyRadius)
 .attr('class','enemyBall')
-.attr('fill', 'blue');
+.attr('fill', enemyColor);
 
 /// 2. Player Ball
 // Create player ball
@@ -70,16 +72,57 @@ createHealthBar();
 // 1.Movement Functions: Keeps the enemy moving
 var speed = 2000;
 var moveEnemyInterval = setInterval(function() {
-  var newPositionBalls =d3enemyBall.data(createNewBall());
+  var passingArray;
+  if(newLevel === 2){
+    passingArray = getEnemyPositions().concat(getEnemyPositions());
+    newLevel = 0;
+    enemyRadius = 20;
+    enemyColor = 'orange';
+  }else if (newLevel === 3) {
+    passingArray = new Array(40).fill([window.innerWidth/2, window.innerHeight/2]);
+    newLevel = 0;
+  } else if (newLevel === 4 ){
+    passingArray = [[0,0],[0,window.innerHeight]];
+    newLevel = 4.5;
+    enemyColor = 'purple';
+    blackOutColor = 'purple';
+  } else if (newLevel === 4.5){
+    enemyRadius = 20;
+
+    if(document.getElementsByClassName('enemyBall').length === 2){
+      var topLeftArr = new Array(numberOfBallShoot).fill([0,0]);
+      var topBottomArr = new Array(numberOfBallShoot).fill([0, window.innerHeight]);
+      passingArray = [[0,0],[0,window.innerHeight]].concat(topLeftArr,topBottomArr);
+    }else if(document.getElementsByClassName('enemyBall').length > 2 && document.getElementsByClassName('enemyBall')[2].getAttribute('cx')==='0'){
+      passingArray = [[0,0],[0,window.innerHeight]];
+      for (var i = 2; i < document.getElementsByClassName('enemyBall').length;i++){
+        passingArray.push([window.innerWidth*Math.random()+window.innerWidth, Math.random()*window.innerHeight]);
+      }
+    }else{
+      passingArray  = [[0,0],[0,window.innerHeight]];
+    }
+    numberOfBallShoot += 2;
+    speed -= 100;
+
+  }else {
+    passingArray = createNewPositions();
+  }
+  var newPositionBalls =d3.select('.svgBoard').selectAll('.enemyBall').data(passingArray);
   newPositionBalls.transition().duration(speed)
   .attr('cx', function(d){return d[0]})
   .attr('cy', function(d){return d[1]})
+  .attr('r', enemyRadius)
+  .style('fill', enemyColor);
   newPositionBalls.enter()
-  .append('circle')
-  .transition().duration(speed)
+  .append('circle').transition().duration(500)
   .attr('cx', function(d){return d[0]})
-  .attr('cy', function(d){return d[1]})
-}, speed);
+  .attr('cy', function(d){return d[1]}).attr('r', enemyRadius)
+  .attr('class', 'enemyBall')
+  .style('fill', enemyColor);
+
+  newPositionBalls.exit().remove();
+
+}, 2000);
 
 
 /* Check collision every setInterval, 1. getting the enemy positions into an
@@ -91,11 +134,7 @@ occurence function.
 var collisionInterval = setInterval(function(){checkCollision()}, 100);
 var checkCollision = function(){
   // get current enemy current pos
-  var currentEnemyPos = [];
-  var enemyBalls = document.getElementsByClassName('enemyBall');
-  _.each(enemyBalls, function(enemy){
-    currentEnemyPos.push([enemy.getAttribute('cx'), enemy.getAttribute('cy')]);
-  })
+  var currentEnemyPos = getEnemyPositions();
   // get current playerBall pos
   var currentPlayer = document.getElementsByClassName('playerBall')[0];
   var currentPlayerPos = [currentPlayer.getAttribute('cx'), currentPlayer.getAttribute('cy')];
@@ -107,6 +146,14 @@ var checkCollision = function(){
       collisionOccurence();
     }
   }
+}
+var getEnemyPositions = function(){
+  var currentEnemyPos = [];
+  var enemyBalls = document.getElementsByClassName('enemyBall');
+  _.each(enemyBalls, function(enemy){
+    currentEnemyPos.push([enemy.getAttribute('cx'), enemy.getAttribute('cy')]);
+  })
+  return currentEnemyPos;
 }
 // Every event that happens upon a collision is defined in this function
 var collisionOccurence = function(){
@@ -121,7 +168,7 @@ var collisionOccurence = function(){
   endGame()
   healthUpdate();
   // Blackout
-  d3svgBoard.transition().duration(200).style('background-color', 'blue');
+  d3svgBoard.transition().duration(200).style('background-color', blackOutColor);
   // Recover blackout
   setTimeout(function(){
     d3svgBoard.transition().duration(1500).style('background-color', 'white')
@@ -142,7 +189,7 @@ var endGame = function(){
     .style('bottom', '40vh')
     .style('font-size', '10em');
     d3.select('.level').transition().duration(500)
-    .style('top', '10vh')
+    .style('top', '6vh')
     .style('font-size','6em');
   }
 }
@@ -155,20 +202,42 @@ var healthUpdate = function() {
 
 // Update time constantly
 var time = 0;
-var level = 1;// Keeps track of level(related to time)
 var timeInterval= setInterval(function(){
   d3.select('.time')
   .transition()
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(level < 2 && time > 150) {
-    level = 2;
-    upOneLevel();
+  if(time === 50) {
+    toLevelTwo();
+  } else if (time === 100) {
+    toLevelThree();
+  } else if (time === 150){
+    toLevelFour();
   };
 },100);
 // Level updating
 // Level 2
-var upOneLevel = function(){
+var newLevel = 0;
+var toLevelTwo = function(){
   numberOfEnemy *=2;
+  newLevel = 2;
+  d3.select('.level').transition().duration(900).text('LEVEL 2').style('font-size', '3em');
+  blackOutColor = 'orange';
+}
+var toLevelThree = function(){
+  newLevel = 3;
+  d3.select('.level').transition().duration(900).text('LEVEL 3').style('font-size', '3em');
+  blackOutColor = 'red';
+  setTimeout(function() {
+    numberOfEnemy = 1;
+    enemyRadius = 250;
+    speed = 500;
+    enemyColor = 'red'
+  }, 2100);
+}
+var numberOfBallShoot = 5;
+var toLevelFour = function(){
+  newLevel = 4;
+  speed = 2000;
 }

@@ -56,10 +56,10 @@ body {
 .time, .gameOverText{
   position: fixed;
   bottom: 0;
-  font: font: 100px Tahoma, Helvetica, Arial, Sans-Serif;
+  font-family: 'Gloria Hallelujah', cursive;
   color: black;
   font-size: 3em;
-  text-shadow: 2px 2px 2px blue;
+  /*text-shadow: 2px 2px 2px blue;*/
   opacity: .7;
   width: 100vw;
   text-align: center;
@@ -81,10 +81,11 @@ body {
   width: 100vw;
   height: 5vh;
   text-align: center;
-  font: font: 100px Tahoma, Helvetica, Arial, Sans-Serif;
   color: black;
   font-size: 3em;
-  text-shadow: 2px 2px 2px blue;
+  opacity: .7;
+  font-family: 'Gloria Hallelujah', cursive;
+  /*text-shadow: 2px 2px 2px blue;*/
 
 
 }
