@@ -257,11 +257,11 @@ var timeInterval= setInterval(function(){
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(time === 20) {
+  if(time === 200) {
     toLevelTwo();
-  } else if (time === 40) {
+  } else if (time === 400 {
     toLevelThree();
-  } else if (time === 60){
+  } else if (time === 600){
     toLevelFour();
   };
 },100);
