@@ -257,11 +257,11 @@ var timeInterval= setInterval(function(){
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(time === 200) {
+  if(time === 20) {
     toLevelTwo();
-  } else if (time === 400) {
+  } else if (time === 40) {
     toLevelThree();
-  } else if (time === 600){
+  } else if (time === 60){
     toLevelFour();
   };
 },100);
@@ -290,14 +290,15 @@ var numberOfBallShoot = 20;
 var toLevelFour = function(){
   d3.select('.level').transition().duration(900).text('LEVEL 4').style('font-size', '3em');
   newLevel = 4;
-  speed = 4000;
+  ;
   enemyRadiusUpdate = 100;
   clearInterval(moveEnemyInterval)
   intervalSpeed = 3000;
   pulseRadius = 120;
   moveEnemyIntervalFun();
   setTimeout(function(){
-    levelFourIntervalFun(); 
+    levelFourIntervalFun()
+    speed = 2000; 
   }, 5000)
 }
 
