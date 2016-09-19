@@ -16,13 +16,15 @@ This section is for initiating the balls
 /// 1. Enemy Ball
 //Create new position for 20 enemy balls
 var numberOfEnemy = 10;
-var enemyRadius = 30;
+var enemyRadiusUpdate = 30;
+var enemyRadiusEnter = 30;
+ 
 var enemyColor = 'blue';
 var blackOutColor = 'blue'
 var createNewPositions = function(){
   var enemyPositions = [];
   for( var i = 0; i < numberOfEnemy; i++){
-    enemyPositions[i]=[Math.random()*(window.innerWidth*1.2) - window.innerWidth*.1 , Math.random()*(window.innerHeight*1.2) - window.innerHeight*.1];
+    enemyPositions[i]=[Math.random()*(window.innerWidth*1.2) - window.innerWidth*.1 , Math.random()*(window.innerHeight*1.2) - window.innerHeight*.1, enemyRadiusUpdate];
   }
   return enemyPositions;
 }
@@ -33,7 +35,7 @@ var d3enemyBall = d3svgBoard.selectAll('span')
 .append('circle')
 .attr('cx', function(d){return d[0]})
 .attr('cy', function(d){return d[1]})
-.attr('r', enemyRadius)
+.attr('r', enemyRadiusEnter)
 .attr('class','enemyBall')
 .attr('fill', enemyColor);
 
@@ -70,59 +72,104 @@ createHealthBar();
 */
 
 // 1.Movement Functions: Keeps the enemy moving
+var moveEnemyInterval;
+var intervalSpeed = 2000;
+var cornerNumber = 0;
 var speed = 2000;
-var moveEnemyInterval = setInterval(function() {
+//declare loaded variable for level 4 - if loaded, slow transition, if not, no transition
+var loaded = true;
+var moveEnemyIntervalFun = function() {moveEnemyInterval = setInterval(function() {
   var passingArray;
+  var cornerArray = [[0,0,enemyRadiusUpdate],[0,window.innerHeight, enemyRadiusUpdate],[window.innerWidth, 0, enemyRadiusUpdate], [window.innerWidth, window.innerHeight, enemyRadiusUpdate]];
+  var multiplyFun = function() {
+    if(cornerNumber === 0) {
+      return [window.innerWidth*(1+Math.random()*9), window.innerHeight*(0 + Math.random()*10), enemyRadiusEnter];
+    }
+    if(cornerNumber === 1) {
+      return [window.innerWidth*(1+Math.random()*9), window.innerHeight*(1 + Math.random()*-10), enemyRadiusEnter];
+    }
+    if(cornerNumber === 2) {
+      return [window.innerWidth*(0 - Math.random()*9), window.innerHeight*(0 + Math.random()*10), enemyRadiusEnter];
+    }
+    if(cornerNumber === 3) {
+      return [window.innerWidth*(0 - Math.random()*9), window.innerHeight*(1 + Math.random()*-10), enemyRadiusEnter];
+    }  
+  };
+  //LEVEL CONDITIONS - CHANGE DATA ARRAY DEPENDING ON LEVEL
   if(newLevel === 2){
     passingArray = getEnemyPositions().concat(getEnemyPositions());
     newLevel = 0;
-    enemyRadius = 20;
+    enemyRadiusEnter = 30;
+    enemyRadiusUpdate = 20;
     enemyColor = 'orange';
   }else if (newLevel === 3) {
-    passingArray = new Array(40).fill([window.innerWidth/2, window.innerHeight/2]);
+    passingArray = new Array(40).fill([window.innerWidth/2, window.innerHeight/2, enemyRadiusUpdate]);
     newLevel = 0;
   } else if (newLevel === 4 ){
-    passingArray = [[0,0],[0,window.innerHeight]];
+    passingArray = cornerArray;
     newLevel = 4.5;
     enemyColor = 'purple';
     blackOutColor = 'purple';
+    enemyRadiusEnter = 20;
   } else if (newLevel === 4.5){
-    enemyRadius = 20;
 
-    if(document.getElementsByClassName('enemyBall').length === 2){
-      var topLeftArr = new Array(numberOfBallShoot).fill([0,0]);
-      var topBottomArr = new Array(numberOfBallShoot).fill([0, window.innerHeight]);
-      passingArray = [[0,0],[0,window.innerHeight]].concat(topLeftArr,topBottomArr);
-    }else if(document.getElementsByClassName('enemyBall').length > 2 && document.getElementsByClassName('enemyBall')[2].getAttribute('cx')==='0'){
-      passingArray = [[0,0],[0,window.innerHeight]];
-      for (var i = 2; i < document.getElementsByClassName('enemyBall').length;i++){
-        passingArray.push([window.innerWidth*Math.random()+window.innerWidth, Math.random()*window.innerHeight]);
+    if(loaded){
+      passingArray = cornerArray;
+      currentPlayer = document.getElementsByClassName('playerBall')[0];
+      for (var i = 4; i < document.getElementsByClassName('enemyBall').length;i++){
+        passingArray.push(multiplyFun());
       }
     }else{
-      passingArray  = [[0,0],[0,window.innerHeight]];
+      passingArray = cornerArray;
+      cornerNumber = Math.floor(Math.random()*4);
+      var bulletArray = new Array(numberOfBallShoot).fill([cornerArray[cornerNumber][0], cornerArray[cornerNumber][1], enemyRadiusEnter]);
+      passingArray = passingArray.concat(bulletArray);
     }
-    numberOfBallShoot += 2;
-    speed -= 100;
 
   }else {
     passingArray = createNewPositions();
   }
+  //UPDATE AND ENTER SELECTIONS WITH PASSINGARRAY AS DATA ARRAY - PASSING ARRAY
+  //DETERMINED FROM LEVEL CONDITIONS ABOVE
+
+  //DEFINE THE TRANSITION OUTSIDE OF THE FUNCTION
+    var t = d3.transition().duration(function(d) {
+    if (!loaded && newLevel > 3) {
+        return 0;
+    }
+    return speed;
+
+  }); 
+
   var newPositionBalls =d3.select('.svgBoard').selectAll('.enemyBall').data(passingArray);
-  newPositionBalls.transition().duration(speed)
+  newPositionBalls.transition(t).delay(function(d,i){
+    if (loaded && newLevel > 3) {
+      return i*150;
+    }
+    return 0;
+  })
+  .style('fill', enemyColor)
   .attr('cx', function(d){return d[0]})
   .attr('cy', function(d){return d[1]})
-  .attr('r', enemyRadius)
-  .style('fill', enemyColor);
+  .attr('r', function(d){return d[2]});
   newPositionBalls.enter()
-  .append('circle').transition().duration(500)
+  .append('circle').transition(t)
+  .style('fill', enemyColor)
   .attr('cx', function(d){return d[0]})
-  .attr('cy', function(d){return d[1]}).attr('r', enemyRadius)
-  .attr('class', 'enemyBall')
-  .style('fill', enemyColor);
+  .attr('cy', function(d){return d[1]})
+  .attr('r', function(d){return d[2]})
+  .attr('class', 'enemyBall');
 
   newPositionBalls.exit().remove();
+  if (newLevel === 4 || newLevel === 4.5){
+    loaded = !loaded;
+  }
 
-}, 2000);
+
+}, intervalSpeed)};
+
+//invoke the function
+moveEnemyIntervalFun();
 
 
 /* Check collision every setInterval, 1. getting the enemy positions into an
@@ -131,7 +178,7 @@ ball using collision test function. When there is a collision 3.run our collisio
 occurence function.
 */
 // Run collision Test
-var collisionInterval = setInterval(function(){checkCollision()}, 100);
+var collisionInterval = setInterval(function(){checkCollision()}, 10);
 var checkCollision = function(){
   // get current enemy current pos
   var currentEnemyPos = getEnemyPositions();
@@ -141,7 +188,7 @@ var checkCollision = function(){
   // Check collision for all enmeny
   for (var i = 0;i < currentEnemyPos.length;i++){
     var d = Math.sqrt(Math.pow(currentEnemyPos[i][0]-currentPlayerPos[0],2)+Math.pow(currentEnemyPos[i][1]-currentPlayerPos[1],2));
-    if (d < (playerRadius+enemyRadius) && playerCanCollide){
+    if (d < (playerRadius+Number(currentEnemyPos[i][2])) && playerCanCollide){
       // Execute collision Occurence when there is a collision
       collisionOccurence();
     }
@@ -151,7 +198,7 @@ var getEnemyPositions = function(){
   var currentEnemyPos = [];
   var enemyBalls = document.getElementsByClassName('enemyBall');
   _.each(enemyBalls, function(enemy){
-    currentEnemyPos.push([enemy.getAttribute('cx'), enemy.getAttribute('cy')]);
+    currentEnemyPos.push([enemy.getAttribute('cx'), enemy.getAttribute('cy'), enemy.getAttribute('r')]);
   })
   return currentEnemyPos;
 }
@@ -182,22 +229,23 @@ var endGame = function(){
     clearInterval(moveEnemyInterval);
     // Pops time
     d3.select('.time').transition().duration(500)
-    .style('bottom', '65vh')
+    .style('top', '' + window.innerHeight*.3 + 'px')
     .style('font-size','6em');
     d3.select('.gameOverText').transition().duration(500)
     .text('GAME OVER')
-    .style('bottom', '40vh')
+    .style('top', '' + window.innerHeight*.5 + 'px')
     .style('font-size', '10em');
     d3.select('.level').transition().duration(500)
-    .style('top', '6vh')
+    .style('top', '' + window.innerHeight*.0 + 'px')
     .style('font-size','6em');
   }
 }
 // update the health bar
 var healthUpdate = function() {
   var healthColors = ['#45DC00','#7ED800', '#B6D400', '#CFB400', '#CB7A00', '#C74100', '#C74100', '#C30B00', '#C30B00', '#BF0029'];
-  var healthHeight = '' + window.innerHeight*(lifeLimit - collisionCount)/10;
-  d3.select('#health').transition().duration(2000).attr('y', window.innerHeight -healthHeight).style('fill', healthColors[collisionCount]);
+  var healthHeight = '' + window.innerHeight*(lifeLimit - collisionCount)/lifeLimit;
+  d3.select('#health').transition().duration(2000).attr('y', window.innerHeight -healthHeight).style('fill', healthColors[Math.floor(collisionCount/lifeLimit*10)]);
+  d3.select('.health').transition().duration(2000).style('top', '' + window.innerHeight - healthHeight + 'px');
 }
 
 // Update time constantly
@@ -208,11 +256,11 @@ var timeInterval= setInterval(function(){
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(time === 50) {
+  if(time === 300) {
     toLevelTwo();
-  } else if (time === 100) {
+  } else if (time === 600) {
     toLevelThree();
-  } else if (time === 150){
+  } else if (time === 900){
     toLevelFour();
   };
 },100);
@@ -231,13 +279,19 @@ var toLevelThree = function(){
   blackOutColor = 'red';
   setTimeout(function() {
     numberOfEnemy = 1;
-    enemyRadius = 250;
+    enemyRadiusEnter = 250;
+    enemyRadiusUpdate = 250;
     speed = 500;
     enemyColor = 'red'
   }, 2100);
 }
-var numberOfBallShoot = 5;
+var numberOfBallShoot = 20;
 var toLevelFour = function(){
+  d3.select('.level').transition().duration(900).text('LEVEL 4').style('font-size', '3em');
   newLevel = 4;
-  speed = 2000;
+  speed = 2500;
+  enemyRadiusUpdate = 100;
+  clearInterval(moveEnemyInterval)
+  intervalSpeed = 3000;
+  moveEnemyIntervalFun();
 }
