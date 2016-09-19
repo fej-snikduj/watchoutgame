@@ -259,7 +259,7 @@ var timeInterval= setInterval(function(){
   time++;
   if(time === 200) {
     toLevelTwo();
-  } else if (time === 400 {
+  } else if (time === 400) {
     toLevelThree();
   } else if (time === 600){
     toLevelFour();
