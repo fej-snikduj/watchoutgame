@@ -18,7 +18,7 @@ This section is for initiating the balls
 var numberOfEnemy = 10;
 var enemyRadiusUpdate = 30;
 var enemyRadiusEnter = 30;
-var pulseRadius = 200;
+var pulseRadius = 120;
  
 var enemyColor = 'blue';
 var blackOutColor = 'blue'
@@ -81,7 +81,7 @@ var speed = 2000;
 var loaded = true;
 var moveEnemyIntervalFun = function() {moveEnemyInterval = setInterval(function() {
   var passingArray;
-  var cornerArray = [[0,0,enemyRadiusUpdate],[0,window.innerHeight, enemyRadiusUpdate],[window.innerWidth, 0, enemyRadiusUpdate], [window.innerWidth, window.innerHeight, enemyRadiusUpdate]];
+  var cornerArray = [[0,0,pulseRadius],[0,window.innerHeight, pulseRadius],[window.innerWidth, 0, pulseRadius], [window.innerWidth, window.innerHeight, pulseRadius]];
   var multiplyFun = function() {
     if(cornerNumber === 0) {
       return [window.innerWidth*(1+Math.random()*9), window.innerHeight*(0 + Math.random()*10), enemyRadiusEnter];
@@ -165,8 +165,6 @@ var moveEnemyIntervalFun = function() {moveEnemyInterval = setInterval(function(
   if (newLevel === 4 || newLevel === 4.5){
     loaded = !loaded;
   }
-
-  pulseRadius = 50;
 
 
 }, intervalSpeed)};
@@ -259,11 +257,11 @@ var timeInterval= setInterval(function(){
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(time === 20) {
+  if(time === 200) {
     toLevelTwo();
-  } else if (time === 40) {
+  } else if (time === 400) {
     toLevelThree();
-  } else if (time === 60){
+  } else if (time === 600){
     toLevelFour();
   };
 },100);
@@ -292,17 +290,24 @@ var numberOfBallShoot = 20;
 var toLevelFour = function(){
   d3.select('.level').transition().duration(900).text('LEVEL 4').style('font-size', '3em');
   newLevel = 4;
-  speed = 2500;
+  speed = 4000;
   enemyRadiusUpdate = 100;
   clearInterval(moveEnemyInterval)
   intervalSpeed = 3000;
+  pulseRadius = 120;
   moveEnemyIntervalFun();
-  levelFourIntervalFun();
+  setTimeout(function(){
+    levelFourIntervalFun(); 
+  }, 5000)
 }
 
 
 var levelFourIntervalFun = function(){setInterval(function(){
-  pulseRadius = 150; 
+  if (pulseRadius === 100) {
+    pulseRadius = 120;
+  } else {
+    pulseRadius = 100;
+  }
   var colorArray = ['purple', 'yellow', 'blue', 'red'];
   var newPositionBalls =d3.select('.svgBoard').selectAll('.enemyBall').data([[colorArray[Math.floor(Math.random()*4)], pulseRadius], [colorArray[Math.floor(Math.random()*4)], pulseRadius],[colorArray[Math.floor(Math.random()*4)], pulseRadius],  ['blue', pulseRadius]]);
     newPositionBalls.transition().duration(500)
