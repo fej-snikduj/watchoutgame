@@ -298,7 +298,7 @@ var toLevelFour = function(){
   moveEnemyIntervalFun();
   setTimeout(function(){
     levelFourIntervalFun()
-    speed = 2000; 
+    speed = 2500; 
   }, 5000)
 }
 
