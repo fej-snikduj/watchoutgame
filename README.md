@@ -2,7 +2,7 @@
 
 This is a game made using d3js (https://d3js.org/) that shows the ease of using d3 to manipulate the DOM by dynamically changing data.
 
-watchoutd3.herokuapp.com
+http://watchoutd3.herokuapp.com
 
 ## Team
 
