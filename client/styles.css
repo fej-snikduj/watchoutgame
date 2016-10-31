@@ -1,0 +1,106 @@
+/* your beautiful css styling goes here! */
+* {
+  padding:0;
+  margin:0;
+  border-width: 0;
+}
+/* Note: an asteroid image is included in this repo.
+Feel free to use it if you like. */
+/* START SOLUTION */
+body {
+  margin: 0;
+  font-family: helvetica;
+  /*background-color: black;*/
+}
+/*iframe {
+  position: absolute;
+  z-index: 1;
+}*/
+/*.vis {
+  background-color: black;
+}*/
+.board {
+
+}
+.svgBoard {
+  /*border-width: thick;*/
+  border-style: solid;
+  background-color: white;
+  opacity: 0.5;
+  height: 100vh;
+  width: 100vw;
+}
+/* END SOLUTION */
+
+/*.scoreboard {
+  width: 10vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  float:right
+}
+.scoreboard div {
+  line-height: 33px;
+  font-size: 25px;
+  float: right;
+}*/
+
+.healthbar {
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.5;
+  position: fixed;
+  bottom: 0;
+}
+
+
+.time, .gameOverText{
+  pointer-events: none;
+  position: fixed;
+  bottom: 0;
+  font-family: 'Gloria Hallelujah', cursive;
+  color: black;
+  font-size: 3em;
+  /*text-shadow: 2px 2px 2px blue;*/
+  opacity: .7;
+  width: 100vw;
+  text-align: center;
+
+}
+
+.health {
+  pointer-events: none;
+  margin: auto;
+  font-family: 'Gloria Hallelujah', cursive;
+  color: black;
+  font-size: 1.5em;
+  opacity: .7;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  text-align: right;
+}
+
+#health {
+  height: 100vh;
+  width: 10vw;
+  fill: green;
+  /*left: 90vh;*/
+  position: fixed;
+  z-index: 5;
+  opacity: .7;
+}
+.level {
+  pointer-events: none;
+  position: absolute;
+  top: 5vh;
+  width: 100vw;
+  height: 5vh;
+  text-align: center;
+  color: black;
+  font-size: 3em;
+  opacity: .7;
+  font-family: 'Gloria Hallelujah', cursive;
+  /*text-shadow: 2px 2px 2px blue;*/
+
+
+}
