@@ -5,11 +5,14 @@
   "main": "client/index.html",
   "scripts": {
     "test": "echo 'Error: no test specified'",
-    "start": "open client/index.html"
+    "start": "nodemon server.js"
   },
   "license": "Copyright 2015, Hack Reactor. All rights reserved.",
   "bugs": {
     "url": "https://github.com/reactorcore/sprint.watchout/issues"
   },
-  "homepage": "https://github.com/reactorcore/sprint.watchout"
+  "homepage": "https://github.com/reactorcore/sprint.watchout",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }

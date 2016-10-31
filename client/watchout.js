@@ -1,7 +1,7 @@
 /// Initial state of overall game;
 // Create a board to let users play in, give it class
 var d3svgBoard = d3.select('.svgBoard');
-var lifeLimit = 15;
+var lifeLimit = 8;
 var collisionCount = 0;
 var createHealthBar = function(){
   d3svgBoard.append('rect').attr('x', '' + window.innerWidth - window.innerWidth*.1).attr('id', 'health').attr('y', '0');
@@ -257,11 +257,11 @@ var timeInterval= setInterval(function(){
   .duration(50)
   .text(""+Math.floor(time/600)+" : "+Math.floor((time/10)%60)+" : "+time%10+'0');
   time++;
-  if(time === 200) {
+  if(time === 150) {
     toLevelTwo();
-  } else if (time === 400) {
+  } else if (time === 300) {
     toLevelThree();
-  } else if (time === 600){
+  } else if (time === 450){
     toLevelFour();
   };
 },100);
