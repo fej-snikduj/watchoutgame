@@ -43,8 +43,6 @@ npm install
 ```
 
 
-From your postgres terminal, create a database called 'beacon'
-
 ### Roadmap
 
 View the project roadmap [here](https://github.com/fej-snikduj/watchoutgame/issues)
