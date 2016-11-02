@@ -2,6 +2,11 @@
 // Create a board to let users play in, give it class
 var d3svgBoard = d3.select('.svgBoard');
 
+//add device motion detection for mobile browsers
+$(document).ready(function(){
+  window.addEventListener("devicemotion",onDeviceMotion,false);
+  });
+
 
 /// 2. Player Ball
 // Create player ball
@@ -20,8 +25,18 @@ d3svgBoard.on('mousemove', function(){
   .attr('cx', position[0])
   .attr('cy', position[1]);
 });
-// Set initial game conditions for player ball
-var playerCanCollide = false;
-setTimeout(function(){
-  playerCanCollide = true;
-}, 2000);
+
+function onDeviceMotion(event){
+  var accel = event.accelerationIncludingGravity;
+  $("#xvalue").val(Math.round(accel.x));
+  $("#yvalue").val(Math.round(accel.y)); 
+  $("#zvalue").val(Math.round(accel.z));
+  var angle = Math.atan2(accel.y,accel.x)  
+  // ctx.clearRect(0,0,100,100);
+  // ctx.beginPath();
+  // ctx.arc(50,50,5,0,2*Math.PI,false);
+  // ctx.moveTo(50,50);
+  // ctx.lineTo(50-50*Math.cos(angle),50+50*Math.sin(angle));
+  // ctx.stroke();
+}
+
