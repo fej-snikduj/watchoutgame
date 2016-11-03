@@ -28,8 +28,8 @@ d3svgBoard.on('mousemove', function(){
 
 function onDeviceMotion(event){
   var accel = event.accelerationIncludingGravity;
-  d3svgBoard.attr('cx', Math.round(accel.x));
-  d3svgBoard.attr('cy', Math.round(accel.y));
+  d3.selectAll('circle').attr('cx', Math.round(accel.x));
+  .attr('cy', Math.round(accel.y));
   $("#xvalue").text(Math.round(accel.x));
   $("#yvalue").text(Math.round(accel.y)); 
   $("#zvalue").text(Math.round(accel.z));
