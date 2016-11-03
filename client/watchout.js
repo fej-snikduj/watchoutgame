@@ -28,10 +28,11 @@ d3svgBoard.on('mousemove', function(){
 
 function onDeviceMotion(event){
   var accel = event.accelerationIncludingGravity;
-  $("#xvalue").val(Math.round(accel.x));
-  $("#yvalue").val(Math.round(accel.y)); 
-  $("#zvalue").val(Math.round(accel.z));
-  var angle = Math.atan2(accel.y,accel.x)  
+  $("#xvalue").text(Math.round(accel.x));
+  $("#yvalue").text(Math.round(accel.y)); 
+  $("#zvalue").text(Math.round(accel.z));
+  var angle = Math.atan2(accel.y,accel.x);
+
   // ctx.clearRect(0,0,100,100);
   // ctx.beginPath();
   // ctx.arc(50,50,5,0,2*Math.PI,false);
