@@ -7,6 +7,38 @@ var createHealthBar = function(){
   d3svgBoard.append('rect').attr('x', '' + window.innerWidth - window.innerWidth*.1).attr('id', 'health').attr('y', '0');
 }
 
+//add device motion detection for mobile browsers
+$(document).ready(function(){
+  if (/Mobi/.test(navigator.userAgent)) {
+    window.addEventListener("deviceorientation",onDeviceMotion,false);
+    //define gyroscope function
+    function onDeviceMotion(event){
+      //change x position if the new x posiiton is still within bounds
+      if (currentXPosition + event.gamma > 0 && currentXPosition + event.gamma < window.innerWidth) {
+        currentXPosition = currentXPosition + event.gamma;
+      }  
+      //change y position only if the new y position is still within bounds
+      if (currentYPosition + event.beta > 0 && currentYPosition + event.beta < window.innerHeight) {
+        currentYPosition = currentYPosition + event.beta;
+      }
+      //update the balls position
+      d3.selectAll('.playerBall').attr('cx', currentXPosition)
+      .attr('cy', currentYPosition);
+     
+    }
+    //give alert to user
+    alert('It appears that you are on a mobile device!  You can tilt your device to move the red ball and keep it away from all enemy balls.  However, the game may work best if you lock your screen orientation.  Good luck!');
+  } else {
+    // Makes the playerBall follow mouse cursor(mouse effects)
+    d3svgBoard.on('mousemove', function(){
+      var position = d3.mouse(this);
+      d3svgBoard.select('.playerBall')
+      .attr('cx', position[0])
+      .attr('cy', position[1]);
+    });
+  }
+});
+
 
 /*
 This section is for initiating the balls
@@ -43,20 +75,17 @@ var d3enemyBall = d3svgBoard.selectAll('span')
 /// 2. Player Ball
 // Create player ball
 var playerRadius = 30;
+var currentXPosition = window.innerWidth*0.45;
+var currentYPosition = window.innerHeight*0.45;
+
 d3svgBoard
 .append('circle')
-.attr('cx', window.innerWidth*0.45) //shorten it
-.attr('cy', window.innerHeight*0.45)
+.attr('cx', currentXPosition) //shorten it
+.attr('cy', currentYPosition)
 .attr('r', playerRadius)
 .attr('class','playerBall')
 .attr('fill', 'red');
-// Makes the playerBall follow mouse cursor(mouse effects)
-d3svgBoard.on('mousemove', function(){
-  var position = d3.mouse(this);
-  d3svgBoard.select('.playerBall')
-  .attr('cx', position[0])
-  .attr('cy', position[1]);
-});
+
 // Set initial game conditions for player ball
 var playerCanCollide = false;
 setTimeout(function(){
