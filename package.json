@@ -5,7 +5,7 @@
   "main": "client/index.html",
   "scripts": {
     "test": "echo 'Error: no test specified'",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "license": "Copyright 2015, Hack Reactor. All rights reserved.",
   "bugs": {
