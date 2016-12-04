@@ -1,6 +1,6 @@
 # WatchoutD3
 
-This is a game made using d3js (https://d3js.org/) that shows the ease of using d3 to manipulate the DOM by dynamically changing data.
+This is a game made using d3js (https://d3js.org/) that shows the ease of using d3 to manipulate the DOM by dynamically changing data.  It works on mobile devices with a gyroscope, or on desktop devices by using a mouse event listener.
 
 http://watchoutd3.herokuapp.com
 
@@ -47,7 +47,3 @@ npm install
 
 View the project roadmap [here](https://github.com/fej-snikduj/watchoutgame/issues)
 
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
