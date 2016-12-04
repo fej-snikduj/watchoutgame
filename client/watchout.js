@@ -9,6 +9,7 @@ var createHealthBar = function(){
 
 //add device motion detection for mobile browsers
 $(document).ready(function(){
+  // check to see if mobile or not
   if (/Mobi/.test(navigator.userAgent)) {
     window.addEventListener("deviceorientation",onDeviceMotion,false);
     //define gyroscope function
