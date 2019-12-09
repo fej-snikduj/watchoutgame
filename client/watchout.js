@@ -13,6 +13,19 @@ var updateState = function() {
 
 };
 
+var testme = function() {
+  alert('tested');
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(response => {
+        if (response === 'granted') {
+          window.addEventListener('deviceorientation', onDeviceMotion, true);
+        }
+      })
+      .catch(console.error);
+  }
+};
+
 //add device motion detection for mobile browsers
 $(document).ready(function() {
   // Prompt for username.
