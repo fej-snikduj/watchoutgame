@@ -8,16 +8,33 @@ var createHealthBar = function() {
   d3svgBoard.append('rect').attr('x', '' + window.innerWidth - window.innerWidth * .1).attr('id', 'health').attr('y', '0');
 };
 
+// Call this whenever state needs to be updated: game over, new game, high scores
+var updateState = function() {
+
+};
+
 //add device motion detection for mobile browsers
 $(document).ready(function() {
   // Prompt for username.
-  localStorage.setItem('username', prompt('Please enter a username', localStorage.getItem('username')));
-  alert('Press ok to play!  Good luck ' + localStorage.getItem('username') + '!!!!');
+  // localStorage.setItem('username', prompt('Please enter a username', localStorage.getItem('username')));
+  // alert('Press ok to play!  Good luck ' + localStorage.getItem('username') + '!!!!');
+  // alert('updates working');
   // check to see if mobile or not
   if (/Mobi/.test(navigator.userAgent)) {
-    window.addEventListener('deviceorientation', onDeviceMotion, false);
+    alert(Object.keys(DeviceOrientationEvent.prototype));
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(response => {
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', onDeviceMotion, true);
+          }
+        })
+        .catch(console.error);
+    }
     //define gyroscope function
     function onDeviceMotion(event) {
+      console.log('onDeviceMotion');
+      alert('yooooo');
       //change x position if the new x posiiton is still within bounds
       if (currentXPosition + event.gamma > 0 && currentXPosition + event.gamma < window.innerWidth) {
         currentXPosition = currentXPosition + event.gamma;
@@ -36,6 +53,7 @@ $(document).ready(function() {
   } else {
     // Makes the playerBall follow mouse cursor(mouse effects)
     d3svgBoard.on('mousemove', function() {
+      console.log('mousemove');
       var position = d3.mouse(this);
       d3svgBoard.select('.playerBall')
         .attr('cx', position[0])

@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/reactorcore/sprint.watchout",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "gyronorm": "^2.0.6"
   }
 }
