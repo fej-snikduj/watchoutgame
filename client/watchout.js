@@ -19,7 +19,7 @@ var testme = function() {
     DeviceOrientationEvent.requestPermission()
       .then(response => {
         if (response === 'granted') {
-          window.addEventListener('deviceorientation', onDeviceMotion, true);
+          window.addEventListener('deviceorientation', () => alert('yoooo'), true);
         }
       })
       .catch(console.error);
